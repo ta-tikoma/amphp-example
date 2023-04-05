@@ -1,0 +1,27 @@
+{
+    "name": "ni_shi/amphp-example",
+    "type": "project",
+    "description": "AMPHP Example",
+    "keywords": ["amphp", "example"],
+    "license": "MIT",
+    "require": {
+        "php": "^8.1",
+        "amphp/amp": "^3.0",
+        "amphp/http-client": "^5.0",
+        "amphp/sync": "^2.0",
+        "vlucas/phpdotenv": "^5.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Modules\\": "modules/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
