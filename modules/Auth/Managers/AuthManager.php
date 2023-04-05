@@ -14,13 +14,13 @@ use Modules\Storage\Repositories\TokenRepository;
 
 final class AuthManager
 {
-    private LocalParcel $token;
+    private LocalParcel $parcel;
 
     public function __construct(
         private ApiGuestClient $apiGuestClient,
         private TokenRepository $tokenRepository,
     ) {
-        $this->token = new LocalParcel(new LocalMutex, null);
+        $this->parcel = new LocalParcel(new LocalMutex, null);
     }
 
     /**
@@ -28,7 +28,7 @@ final class AuthManager
      */
     public function invalidToken(string $accessToken): void
     {
-        $this->token->synchronized(function (Tokens $tokens) use ($accessToken): Tokens {
+        $this->parcel->synchronized(function (Tokens $tokens) use ($accessToken): Tokens {
             if ($tokens->access_token === $accessToken) {
                 if ($tokens->status === TokensStatus::GOOD) {
                     return new Tokens($tokens->access_token, $tokens->refresh_token, TokensStatus::OLD);
@@ -44,7 +44,7 @@ final class AuthManager
      */
     public function getAccessToken(): string
     {
-        $tokens = $this->token->synchronized(function (Tokens|null $tokens): Tokens {
+        $tokens = $this->parcel->synchronized(function (Tokens|null $tokens): Tokens {
             // если значений нет проверим их в хранилище
             if ($tokens === null) {
                 $value = $this->tokenRepository->get();
